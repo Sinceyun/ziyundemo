@@ -45,7 +45,6 @@ export const asyncRouterMap = [
           }
         ]
       },
-
       // forms
       {
         path: '/form',
@@ -73,7 +72,28 @@ export const asyncRouterMap = [
           }
         ]
       },
-
+      // lost
+      {
+        path: '/lost',
+        name: 'lost',
+        redirect: '/lost/form-lost',
+        component: RouteView,
+        meta: { title: '寻物启事', icon: 'alert', keepAlive: true, permission: [ 'form' ] },
+        children: [
+          {
+            path: '/lost/form-lost',
+            name: 'FormLost',
+            component: () => import('@/views/lost/FormLost'),
+            meta: { title: '发布', keepAlive: true, permission: [ 'form' ] }
+          },
+          {
+            path: '/lost/search-lost',
+            name: 'SearchLost',
+            component: () => import('@/views/lost/SearchLost'),
+            meta: { title: '查询', keepAlive: true, permission: [ 'form' ] }
+          }
+        ]
+      },
       // list
       {
         path: '/list',

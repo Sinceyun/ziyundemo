@@ -18,7 +18,7 @@
             <a-input
               size="large"
               type="text"
-              placeholder="账户: admin"
+              placeholder="工号: admin"
               v-decorator="[
                 'username',
                 {rules: [{ required: true, message: '请输入工号' }, { validator: handleUsernameOrEmail }], validateTrigger: 'change'}
