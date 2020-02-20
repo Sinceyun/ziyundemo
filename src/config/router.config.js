@@ -91,6 +91,12 @@ export const asyncRouterMap = [
             name: 'SearchLost',
             component: () => import('@/views/lost/SearchLost'),
             meta: { title: '查询', keepAlive: true, permission: [ 'form' ] }
+          },
+          {
+            path: '/lost/delete-lost',
+            name: 'DeleteLost',
+            component: () => import('@/views/lost/deleteLost'),
+            meta: { title: '删除表单', keepAlive: true, permission: [ 'form' ] }
           }
         ]
       },
