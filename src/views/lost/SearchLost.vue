@@ -1,5 +1,31 @@
 <template>
   <a-card :body-style="{padding: '24px 32px'}" :bordered="false">
+    <a-row :gutter="16">
+      <a-col :span="8">
+        <label for="lostplace"><b>丢失地点: </b></label>
+        <a-select id="lostplace" defaultValue="all" style="width: 120px" @change="placeChange">
+          <a-select-option value="taishan">泰山区</a-select-option>
+          <a-select-option value="huashan">华山区</a-select-option>
+          <a-select-option value="qilin">启林区</a-select-option>
+          <a-select-option value="other">其他</a-select-option>
+          <a-select-option value="all">全部</a-select-option>
+        </a-select>
+      </a-col>
+      <a-col :span="8">
+        <label for="lostsort"><b>失物类别: </b></label>
+        <a-select id="lostsort" defaultValue="all" style="width: 120px" @change="sortChange">
+          <a-select-option value="all">全部</a-select-option>
+          <a-select-option value="certificat">证件</a-select-option>
+          <a-select-option value="money">财物</a-select-option>
+          <a-select-option value="other">其他</a-select-option>
+        </a-select>
+      </a-col>
+      <a-col :span="8">
+        <a-button type="primary" @click="handleSearch">查询</a-button>
+      </a-col>
+    </a-row>
+    <a-row :gutter="16">
+    </a-row>
     <a-list
       itemLayout="vertical"
       size="small"
@@ -24,7 +50,7 @@
   </a-card>
 </template>
 <script>
-const listData = []
+var listData = []
 for (let i = 0; i < 23; i++) {
   listData.push({
     title: `找男朋友 ${i}`,
@@ -42,6 +68,8 @@ export default {
   data () {
     return {
       listData,
+      selectplace: 'all',
+      selectsort: 'all',
       pagination: {
         onChange: (page) => {
           console.log(page)
@@ -54,6 +82,18 @@ export default {
   methods: {
     deleteLostForm (e) {
 
+    },
+    placeChange (value) {
+      this.selectplace = value
+      console.log('丢失地点：' + this.selectplace)
+    },
+    sortChange (value) {
+      this.selectsort = value
+      console.log(`selected ${value}`)
+      console.log('失物类别' + this.selectsort)
+    },
+    handleSearch () {
+      console.log('current :丢失地点-' + this.selectplace + '&失物类别-' + this.selectsort)
     }
   }
 }

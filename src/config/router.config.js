@@ -11,6 +11,62 @@ export const asyncRouterMap = [
     meta: { title: '首页' },
     redirect: '/dashboard/workplace',
     children: [
+      // lost
+      {
+        path: '/lost',
+        name: 'lost',
+        redirect: '/lost/form-lost',
+        component: RouteView,
+        meta: { title: '寻物启事', icon: 'alert', keepAlive: true, permission: [ 'form' ] },
+        children: [
+          {
+            path: '/lost/form-lost',
+            name: 'FormLost',
+            component: () => import('@/views/lost/FormLost'),
+            meta: { title: '发布', keepAlive: true, permission: [ 'form' ] }
+          },
+          {
+            path: '/lost/search-lost',
+            name: 'SearchLost',
+            component: () => import('@/views/lost/SearchLost'),
+            meta: { title: '查询', keepAlive: true, permission: [ 'form' ] }
+          },
+          {
+            path: '/lost/delete-lost',
+            name: 'DeleteLost',
+            component: () => import('@/views/lost/deleteLost'),
+            meta: { title: '删除表单', keepAlive: true, permission: [ 'form' ] }
+          }
+        ]
+      },
+      // found
+      {
+        path: '/found',
+        name: 'found',
+        redirect: '/found/form-found',
+        component: RouteView,
+        meta: { title: '失物招领', icon: 'alert', keepAlive: true, permission: [ 'form' ] },
+        children: [
+          {
+            path: '/found/form-found',
+            name: 'FormFound',
+            component: () => import('@/views/found/FormFound'),
+            meta: { title: '发布', keepAlive: true, permission: [ 'form' ] }
+          },
+          {
+            path: '/found/search-found',
+            name: 'SearchFound',
+            component: () => import('@/views/found/SearchFound'),
+            meta: { title: '查询', keepAlive: true, permission: [ 'form' ] }
+          },
+          {
+            path: '/found/delete-found',
+            name: 'DeleteFound',
+            component: () => import('@/views/found/DeleteFound'),
+            meta: { title: '删除表单', keepAlive: true, permission: [ 'form' ] }
+          }
+        ]
+      },
       // dashboard
       {
         path: '/dashboard',
@@ -69,34 +125,6 @@ export const asyncRouterMap = [
             name: 'AdvanceForm',
             component: () => import('@/views/form/advancedForm/AdvancedForm'),
             meta: { title: '高级表单', keepAlive: true, permission: [ 'form' ] }
-          }
-        ]
-      },
-      // lost
-      {
-        path: '/lost',
-        name: 'lost',
-        redirect: '/lost/form-lost',
-        component: RouteView,
-        meta: { title: '寻物启事', icon: 'alert', keepAlive: true, permission: [ 'form' ] },
-        children: [
-          {
-            path: '/lost/form-lost',
-            name: 'FormLost',
-            component: () => import('@/views/lost/FormLost'),
-            meta: { title: '发布', keepAlive: true, permission: [ 'form' ] }
-          },
-          {
-            path: '/lost/search-lost',
-            name: 'SearchLost',
-            component: () => import('@/views/lost/SearchLost'),
-            meta: { title: '查询', keepAlive: true, permission: [ 'form' ] }
-          },
-          {
-            path: '/lost/delete-lost',
-            name: 'DeleteLost',
-            component: () => import('@/views/lost/deleteLost'),
-            meta: { title: '删除表单', keepAlive: true, permission: [ 'form' ] }
           }
         ]
       },
