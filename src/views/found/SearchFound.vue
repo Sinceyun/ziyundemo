@@ -24,7 +24,7 @@
       <a-col :span="7">
         <label for="foundplace"><b>当前状态: </b></label>
         <a-select id="foundstatus" defaultValue="all" style="width: 100px" @change="statusChange">
-          <a-select-option value="founding">寻找中...</a-select-option>
+          <a-select-option value="寻找中...">寻找中...</a-select-option>
           <a-select-option value="founded">已找到</a-select-option>
           <a-select-option value="all">全部</a-select-option>
         </a-select>
@@ -49,6 +49,10 @@
         >
         </a-list-item-meta>
         <div>
+          <div>
+            <span>发布时间：{{ item.publicTime }}</span>
+            <span>编号：{{ item.id }}</span>
+          </div>
           <b>{{ item.content }}</b>
           <div>拾获时间：{{ item.foundTime }}</div>
           <div>丢失地点：{{ item.foundplace }}</div>
@@ -67,6 +71,7 @@ export default {
         owner: '201625022850',
         title: '捡到一把钥匙',
         content: '在西园一楼食堂捡到的，钥匙圈有皮卡丘挂件',
+        publicTime: '2020-03-06',
         foundTime: '2020-03-05',
         foundplace: '华山区',
         foundsort: '财物',
@@ -78,6 +83,7 @@ export default {
         owner: '201625022851',
         title: '捡到一本书《幽默散文读本》',
         content: '在教三405室捡到的',
+        publicTime: '2020-03-06',
         foundTime: '2020-03-06',
         foundplace: '华山区',
         foundsort: '书本',
@@ -111,7 +117,8 @@ export default {
       console.log(`selected ${value}`)
       console.log('失物类别' + this.selectsort)
     },
-    statusChange () {
+    statusChange (value) {
+      this.selectstatus = value
       console.log('current :当前状态-' + this.selectstatus)
     },
     handleSearch () {
