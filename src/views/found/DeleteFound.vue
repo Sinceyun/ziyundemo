@@ -13,6 +13,10 @@
           <a href="#">删除</a>
         </a-popconfirm>
       </template>
+      <div slot="expandedRowRender" slot-scope="record" style="margin: 0">
+        <p>{{ record.description }}</p>
+        <img width="150" alt="logo" :src="record.picture"/>
+      </div>
     </a-table>
   </div>
 </template>
@@ -24,7 +28,9 @@ var dataSource = [{
   publictime: '2020-4-03',
   status: '寻找中',
   place: '华山区',
-  sort: '财物'
+  sort: '财物',
+  description: '这是详细描述',
+  picture: 'http://img5.imgtn.bdimg.com/it/u=2079730006,405640849&fm=15&gp=0.jpg'
 }, {
   owner: '201625022850',
   id: '0002',
@@ -32,7 +38,8 @@ var dataSource = [{
   publictime: '2020-4-05',
   status: '寻找中',
   place: '泰山区',
-  sort: '书本'
+  sort: '书本',
+  description: '这是详细描述'
 }, {
   owner: 'admin',
   id: '0003',
@@ -40,7 +47,8 @@ var dataSource = [{
   publictime: '2020-4-04',
   status: '已找到',
   place: '华山区',
-  sort: '财物'
+  sort: '财物',
+  description: '这是详细描述'
 }, {
   owner: '201625040227',
   id: '0004',
@@ -48,7 +56,8 @@ var dataSource = [{
   publictime: '2020-4-19',
   status: '已找到',
   place: '华山区',
-  sort: '书本'
+  sort: '书本',
+  description: '这是详细描述'
 }, {
   owner: 'admin',
   id: '0005',
@@ -56,7 +65,8 @@ var dataSource = [{
   publictime: '2020-4-03',
   status: '寻找中',
   place: '泰山区',
-  sort: '财物'
+  sort: '财物',
+  description: '这是详细描述'
 }, {
   owner: '201625060448',
   id: '0006',
@@ -64,7 +74,8 @@ var dataSource = [{
   publictime: '2020-4-05',
   status: '寻找中',
   place: '其他',
-  sort: '书本'
+  sort: '书本',
+  description: '这是详细描述'
 }, {
   owner: 'admin',
   id: '0007',
@@ -72,7 +83,8 @@ var dataSource = [{
   publictime: '2020-4-04',
   status: '寻找中',
   place: '启林区',
-  sort: '财物'
+  sort: '财物',
+  description: '这是详细描述'
 }, {
   owner: '201625010227',
   id: '0008',
@@ -80,7 +92,8 @@ var dataSource = [{
   publictime: '2020-4-19',
   status: '已找到',
   place: '泰山区',
-  sort: '书本'
+  sort: '书本',
+  description: '这是详细描述'
 }, {
   owner: 'admin',
   id: '0009',
@@ -88,7 +101,8 @@ var dataSource = [{
   publictime: '2020-4-03',
   status: '寻找中',
   place: '华山区',
-  sort: '财物'
+  sort: '财物',
+  description: '这是详细描述'
 }, {
   owner: '201625022850',
   id: '0010',
@@ -96,7 +110,8 @@ var dataSource = [{
   publictime: '2020-4-05',
   status: '寻找中',
   place: '泰山区',
-  sort: '书本'
+  sort: '书本',
+  description: '这是详细描述'
 }, {
   owner: 'admin',
   id: '0011',
@@ -104,7 +119,8 @@ var dataSource = [{
   publictime: '2020-4-04',
   status: '已找到',
   place: '华山区',
-  sort: '财物'
+  sort: '财物',
+  description: '这是详细描述'
 }, {
   owner: '201625040227',
   id: '0012',
@@ -112,7 +128,8 @@ var dataSource = [{
   publictime: '2020-4-19',
   status: '已找到',
   place: '华山区',
-  sort: '书本'
+  sort: '书本',
+  description: '这是详细描述'
 }, {
   owner: 'admin',
   id: '0013',
@@ -120,7 +137,8 @@ var dataSource = [{
   publictime: '2020-4-03',
   status: '寻找中',
   place: '泰山区',
-  sort: '财物'
+  sort: '财物',
+  description: '这是详细描述'
 }, {
   owner: '201625060448',
   id: '0014',
@@ -128,7 +146,8 @@ var dataSource = [{
   publictime: '2020-4-05',
   status: '寻找中',
   place: '其他',
-  sort: '书本'
+  sort: '书本',
+  description: '这是详细描述'
 }, {
   owner: 'admin',
   id: '0015',
@@ -136,7 +155,8 @@ var dataSource = [{
   publictime: '2020-4-04',
   status: '寻找中',
   place: '启林区',
-  sort: '财物'
+  sort: '财物',
+  description: '这是详细描述'
 }, {
   owner: '201625010227',
   id: '0016',
@@ -144,7 +164,8 @@ var dataSource = [{
   publictime: '2020-4-19',
   status: '已找到',
   place: '泰山区',
-  sort: '书本'
+  sort: '书本',
+  description: '这是详细描述'
 }]
 
 export default {

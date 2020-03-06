@@ -64,6 +64,12 @@ export const asyncRouterMap = [
             name: 'DeleteFound',
             component: () => import('@/views/found/DeleteFound'),
             meta: { title: '删除表单', keepAlive: true, permission: [ 'form' ] }
+          },
+          {
+            path: '/found/myform-found',
+            name: 'MyForm',
+            component: () => import('@/views/found/MyForm'),
+            meta: { title: '我的表单', keepAlive: true, permission: [ 'form' ] }
           }
         ]
       },

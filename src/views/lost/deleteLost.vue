@@ -69,7 +69,7 @@ export default {
       console.log('数组下标：' + ((currentPage - 1) * 5 + index))
       listData[(currentPage - 1) * 5 + index].weight = 1
       listData.sort(function (a, b) { return b.weight - a.weight })
-      this.$form.createForm(this)
+      // this.$form.createForm(this)
     }
   }
 }
