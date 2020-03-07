@@ -17,14 +17,8 @@ export const asyncRouterMap = [
         name: 'lost',
         redirect: '/lost/form-lost',
         component: RouteView,
-        meta: { title: '寻物启事', icon: 'alert', keepAlive: true, permission: [ 'form' ] },
+        meta: { title: '寻物启事', icon: 'zoom-in', keepAlive: true, permission: [ 'form' ] },
         children: [
-          {
-            path: '/lost/form-lost',
-            name: 'FormLost',
-            component: () => import('@/views/lost/FormLost'),
-            meta: { title: '发布', keepAlive: true, permission: [ 'form' ] }
-          },
           {
             path: '/lost/search-lost',
             name: 'SearchLost',
@@ -32,10 +26,22 @@ export const asyncRouterMap = [
             meta: { title: '查询', keepAlive: true, permission: [ 'form' ] }
           },
           {
+            path: '/lost/form-lost',
+            name: 'FormLost',
+            component: () => import('@/views/lost/FormLost'),
+            meta: { title: '发布寻物启事', keepAlive: true, permission: [ 'form' ] }
+          },
+          {
             path: '/lost/delete-lost',
             name: 'DeleteLost',
             component: () => import('@/views/lost/deleteLost'),
-            meta: { title: '删除表单', keepAlive: true, permission: [ 'form' ] }
+            meta: { title: '删除寻物启事', keepAlive: true, permission: [ 'form' ] }
+          },
+          {
+            path: '/lost/mylostform-lost',
+            name: 'MyLostForm',
+            component: () => import('@/views/lost/MyLostForm'),
+            meta: { title: '我的寻物启事', keepAlive: true, permission: [ 'form' ] }
           }
         ]
       },
@@ -45,14 +51,8 @@ export const asyncRouterMap = [
         name: 'found',
         redirect: '/found/form-found',
         component: RouteView,
-        meta: { title: '失物招领', icon: 'alert', keepAlive: true, permission: [ 'form' ] },
+        meta: { title: '失物招领', icon: 'zoom-out', keepAlive: true, permission: [ 'form' ] },
         children: [
-          {
-            path: '/found/form-found',
-            name: 'FormFound',
-            component: () => import('@/views/found/FormFound'),
-            meta: { title: '发布', keepAlive: true, permission: [ 'form' ] }
-          },
           {
             path: '/found/search-found',
             name: 'SearchFound',
@@ -60,16 +60,60 @@ export const asyncRouterMap = [
             meta: { title: '查询', keepAlive: true, permission: [ 'form' ] }
           },
           {
+            path: '/found/form-found',
+            name: 'FormFound',
+            component: () => import('@/views/found/FormFound'),
+            meta: { title: '发布招领启事', keepAlive: true, permission: [ 'form' ] }
+          },
+          {
             path: '/found/delete-found',
             name: 'DeleteFound',
             component: () => import('@/views/found/DeleteFound'),
-            meta: { title: '删除表单', keepAlive: true, permission: [ 'form' ] }
+            meta: { title: '删除招领启事', keepAlive: true, permission: [ 'form' ] }
           },
           {
-            path: '/found/myform-found',
-            name: 'MyForm',
-            component: () => import('@/views/found/MyForm'),
-            meta: { title: '我的表单', keepAlive: true, permission: [ 'form' ] }
+            path: '/found/myfoundform-found',
+            name: 'MyFoundForm',
+            component: () => import('@/views/found/MyFoundForm'),
+            meta: { title: '我的招领启事', keepAlive: true, permission: [ 'form' ] }
+          }
+        ]
+      },
+      // usermanagement
+      {
+        path: '/usermng',
+        name: 'usermnglist',
+        redirect: '/usermng/useraction',
+        component: RouteView,
+        meta: { title: '用户管理', icon: 'team', keepAlive: true, permission: [ 'form' ] },
+        children: [
+          {
+            path: '/usermng/useraction',
+            name: 'UserAction',
+            component: () => import('@/views/userManagement/UserAction'),
+            meta: { title: '账户管理', keepAlive: true, permission: [ 'form' ] }
+          }
+        ]
+      },
+      // personinf
+      {
+        path: '/personinf',
+        name: 'personinflist',
+        redirect: '/personinf/information',
+        component: RouteView,
+        meta: { title: '个人中心', icon: 'user', keepAlive: true, permission: [ 'form' ] },
+        children: [
+          {
+            path: '/personinf/informatio',
+            name: 'Information',
+            component: () => import('@/views/personinf/Information'),
+            meta: { title: '基本信息', keepAlive: true, permission: [ 'form' ] }
+          },
+          {
+            path: '/personinf/changepsg',
+            name: 'ChangePsg',
+            component: () => import('@/views/personinf/ChangePsg'),
+            meta: { title: '修改密码', keepAlive: true, permission: [ 'form' ] }
           }
         ]
       },

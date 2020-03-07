@@ -106,14 +106,27 @@
         :wrapperCol="{ span: 24 }"
         style="text-align: center"
       >
-        <a-button htmlType="submit" type="primary">提交</a-button>
+        <!--
+        <a-button htmlType="submit" type="primary" >提交</a-button> !-->
+        <div>
+          <a-button type="primary" @click="showModal">提交</a-button>
+          <a-modal
+            title="表单"
+            :visible="visible"
+            @ok="handleSubmit"
+            :confirmLoading="confirmLoading"
+            @cancel="handleCancel"
+          >
+            <p>{{ ModalText }}</p>
+          </a-modal>
+        </div>
       </a-form-item>
     </a-form>
   </a-card>
 </template>
 <script>
 export default {
-  name: 'FormFound',
+  name: 'FormLost',
   data: () => ({
     formItemLayout: {
       labelCol: { span: 6 },
@@ -122,8 +135,9 @@ export default {
     config: {
       rules: [{ type: 'object', required: true, message: 'Please select time!' }]
     },
-    currentStatus: '寻找中...',
-    msgid: 1
+    visible: false,
+    ModalText: '确认提交招领信息?',
+    confirmLoading: false
   }),
   beforeCreate () {
     this.form = this.$form.createForm(this)
@@ -131,11 +145,26 @@ export default {
   methods: {
     handleSubmit  (e) {
       e.preventDefault()
-      this.form.validateFields((err, values) => {
+      this.form.validateFields((err, fieldsValue) => {
         if (!err) {
+          const today = new Date()
+          const currentday = today.toLocaleDateString()
+          const values = {
+            ...fieldsValue,
+            'date-picker': fieldsValue['date-picker'].format('YYYY-MM-DD'),
+            'owner': 'admin',
+            'public-time': currentday
+          }
           console.log('Received values of form: ', values)
+          this.ModalText = '发布成功！'
+          this.confirmLoading = true
+          setTimeout(() => {
+            this.visible = false
+            this.confirmLoading = false
+          }, 1000)
         }
       })
+      this.form.resetFields()
     },
     normFile  (e) {
       console.log('Upload event:', e)
@@ -143,6 +172,19 @@ export default {
         return e
       }
       return e && e.fileList
+    },
+    showModal (e) {
+      e.preventDefault()
+      this.form.validateFields((err) => {
+        if (!err) {
+          this.visible = true
+        }
+      })
+    },
+    handleCancel (e) {
+      console.log('Clicked cancel button')
+      this.visible = false
+      this.form.resetFields()
     }
   }
 }

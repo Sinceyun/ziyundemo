@@ -58,6 +58,18 @@
           <div>丢失地点：{{ item.foundplace }}</div>
           <div>失物类别：{{ item.foundsort }}</div>
         </div>
+        <template>
+          <a-button type="primary" @click="handleOk (item.id)">留言</a-button>
+        </template>
+        <div v-if="item.visible">
+          <a-textarea
+            v-model="item.textareaMsg"
+            placeholder="请留下你的手机号码等信息，已便发布者联系你！"
+            :rows="4">
+          </a-textarea>
+          <a-button @click="handleSure (item.id)">确定</a-button>
+          <a-button @click="handleCancel(item.id)">取消</a-button>
+        </div>
       </a-list-item>
     </a-list>
   </a-card>
@@ -75,10 +87,12 @@ export default {
         foundTime: '2020-03-05',
         foundplace: '华山区',
         foundsort: '财物',
-        id: '0001',
+        id: '0002',
         currentStatus: '寻找中...',
         weight: 0,
-        picturesrc: ''
+        picturesrc: '',
+        textareaMsg: '',
+        visible: false
       }, {
         owner: '201625022851',
         title: '捡到一本书《幽默散文读本》',
@@ -87,10 +101,12 @@ export default {
         foundTime: '2020-03-06',
         foundplace: '华山区',
         foundsort: '书本',
-        id: '0002',
+        id: '0001',
         currentStatus: '寻找中...',
         weith: 1,
-        picturesrc: 'http://img5.imgtn.bdimg.com/it/u=2079730006,405640849&fm=15&gp=0.jpg'
+        picturesrc: 'http://img5.imgtn.bdimg.com/it/u=2079730006,405640849&fm=15&gp=0.jpg',
+        textareaMsg: '',
+        visible: false
       }],
       selectplace: 'all',
       selectsort: 'all',
@@ -123,6 +139,23 @@ export default {
     },
     handleSearch () {
       console.log('current :拾取地点-' + this.selectplace + '&失物类别-' + this.selectsort)
+    },
+    handleOk (id) {
+      const oj = this.listData.find(oj => oj.id === id)
+      const idx = this.listData.indexOf(oj)
+      this.listData[idx].visible = true
+      console.log(idx)
+    },
+    handleSure (id, index) {
+      const oj = this.listData.find(oj => oj.id === id)
+      const idx = this.listData.indexOf(oj)
+      console.log('留言：' + id + this.listData[idx].textareaMsg + idx)
+    },
+    handleCancel (id) {
+      const oj = this.listData.find(oj => oj.id === id)
+      const idx = this.listData.indexOf(oj)
+      this.listData[idx].textareaMsg = ''
+      this.listData[idx].visible = false
     }
   }
 }
