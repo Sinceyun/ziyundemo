@@ -145,6 +145,11 @@ export default {
     deleteLostForm (index) {
       console.log('数组下标：' + ((this.currentPage - 1) * 5 + index))
       this.listDataFounding.splice((this.currentPage - 1) * 5 + index, 1)
+      this.axios.get('login').then((res) => {
+        console.log(res)
+      }).catch((err) => {
+        console.log(err)
+      })
     },
     deleteLostForm2 (index) {
       console.log('数组下标：' + ((this.currentPage - 1) * 5 + index))

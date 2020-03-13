@@ -2,31 +2,28 @@
   <a-card :body-style="{padding: '24px 32px'}" :bordered="false">
     <a-row :gutter="16">
       <a-col :span="7">
-        <label for="foundplace"><b>拾取地点: </b></label>
-        <a-select id="foundplace" defaultValue="all" style="width: 100px" @change="placeChange">
-          <a-select-option value="taishan">泰山区</a-select-option>
-          <a-select-option value="huashan">华山区</a-select-option>
-          <a-select-option value="qilin">启林区</a-select-option>
-          <a-select-option value="other">其他</a-select-option>
-          <a-select-option value="all">全部</a-select-option>
+        <label for="findplace"><b>拾取地点: </b></label>
+        <a-select id="findplace" defaultValue="华山区" style="width: 100px" @change="placeChange">
+          <a-select-option value="泰山区">泰山区</a-select-option>
+          <a-select-option value="华山区">华山区</a-select-option>
+          <a-select-option value="启林区">启林区</a-select-option>
+          <a-select-option value="其他">其他</a-select-option>
         </a-select>
       </a-col>
       <a-col :span="7">
-        <label for="foundsort"><b>失物类别: </b></label>
-        <a-select id="foundsort" defaultValue="all" style="width: 100px" @change="sortChange">
-          <a-select-option value="all">全部</a-select-option>
-          <a-select-option value="certificat">证件</a-select-option>
-          <a-select-option value="money">财物</a-select-option>
-          <a-select-option value="books">书本</a-select-option>
-          <a-select-option value="other">其他</a-select-option>
+        <label for="findsort"><b>失物类别: </b></label>
+        <a-select id="findsort" defaultValue="证件" style="width: 100px" @change="sortChange">
+          <a-select-option value="证件">证件</a-select-option>
+          <a-select-option value="财物">财物</a-select-option>
+          <a-select-option value="书本">书本</a-select-option>
+          <a-select-option value="其他">其他</a-select-option>
         </a-select>
       </a-col>
       <a-col :span="7">
         <label for="foundplace"><b>当前状态: </b></label>
-        <a-select id="foundstatus" defaultValue="all" style="width: 100px" @change="statusChange">
-          <a-select-option value="寻找中...">寻找中...</a-select-option>
+        <a-select id="foundstatus" defaultValue="寻找中" style="width: 100px" @change="statusChange">
+          <a-select-option value="寻找中">寻找中</a-select-option>
           <a-select-option value="founded">已找到</a-select-option>
-          <a-select-option value="all">全部</a-select-option>
         </a-select>
       </a-col>
       <a-col :span="3">
@@ -41,22 +38,22 @@
       :pagination="pagination"
       :dataSource="listData"
     >
-      <a-list-item slot="renderItem" slot-scope="item" key="item.id">
-        <img slot="extra" width="150" alt="logo" :src="item.picturesrc"/>
+      <a-list-item slot="renderItem" slot-scope="item" key="item.findformid">
+        <img slot="extra" width="150" alt="logo" :src="item.picture"/>
         <a-list-item-meta
-          :description="item.currentStatus"
+          :description="item.status"
           :title="item.title"
         >
         </a-list-item-meta>
         <div>
           <div>
-            <span>发布时间：{{ item.publicTime }}</span>
-            <span>编号：{{ item.id }}</span>
+            <span>发布时间：{{ item.publictime }}</span>
           </div>
-          <b>{{ item.content }}</b>
-          <div>拾获时间：{{ item.foundTime }}</div>
-          <div>丢失地点：{{ item.foundplace }}</div>
-          <div>失物类别：{{ item.foundsort }}</div>
+          <b>{{ item.description }}</b>
+          <div>拾获时间：{{ item.findtime }}</div>
+          <div>丢失地点：{{ item.place }}</div>
+          <div>失物类别：{{ item.sort }}</div>
+          <div>编号：{{ item.findformid }}</div>
         </div>
         <template>
           <a-button type="primary" @click="handleOk (item.id)">留言</a-button>
@@ -79,46 +76,27 @@ export default {
   name: 'SearchFound',
   data () {
     return {
-      listData: [{
-        owner: '201625022850',
-        title: '捡到一把钥匙',
-        content: '在西园一楼食堂捡到的，钥匙圈有皮卡丘挂件',
-        publicTime: '2020-03-06',
-        foundTime: '2020-03-05',
-        foundplace: '华山区',
-        foundsort: '财物',
-        id: '0002',
-        currentStatus: '寻找中...',
-        weight: 0,
-        picturesrc: '',
-        textareaMsg: '',
-        visible: false
-      }, {
-        owner: '201625022851',
-        title: '捡到一本书《幽默散文读本》',
-        content: '在教三405室捡到的',
-        publicTime: '2020-03-06',
-        foundTime: '2020-03-06',
-        foundplace: '华山区',
-        foundsort: '书本',
-        id: '0001',
-        currentStatus: '寻找中...',
-        weith: 1,
-        picturesrc: 'http://img5.imgtn.bdimg.com/it/u=2079730006,405640849&fm=15&gp=0.jpg',
-        textareaMsg: '',
-        visible: false
-      }],
-      selectplace: 'all',
-      selectsort: 'all',
-      selectstatus: 'all',
+      listData: [],
+      selectplace: '华山区',
+      selectsort: '证件',
+      selectstatus: '寻找中',
       pagination: {
         onChange: (page) => {
           console.log(page)
         },
         pageSize: 5
-      },
-      form: this.$form.createForm(this)
+      }
     }
+  },
+  mounted: function () {
+    // var _this = this
+    console.log('拉取失物招领')
+    this.axios.get('/getfindform').then((res) => {
+      console.log(res)
+      this.listData = res
+    }).catch((err) => {
+      console.log(err)
+    })
   },
   methods: {
     deleteLostForm (e) {
@@ -139,6 +117,18 @@ export default {
     },
     handleSearch () {
       console.log('current :拾取地点-' + this.selectplace + '&失物类别-' + this.selectsort)
+      const params = {
+        place: this.selectplace,
+        sort: this.selectsort,
+        status: this.selectstatus
+      }
+      console.log(params)
+      this.axios.get('/searchfindform', { params }).then((res) => {
+        console.log(res)
+        this.listData = res
+      }).catch((err) => {
+        console.log('searchfindform' + err)
+      })
     },
     handleOk (id) {
       const oj = this.listData.find(oj => oj.id === id)

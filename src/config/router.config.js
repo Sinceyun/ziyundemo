@@ -2,6 +2,241 @@
 import { UserLayout, BasicLayout, RouteView, BlankLayout, PageView } from '@/layouts'
 import { bxAnaalyse } from '@/core/icons'
 
+export const adminRouterMap = [
+  {
+    path: '/',
+    name: 'index',
+    component: BasicLayout,
+    meta: { title: '首页' },
+    redirect: '/lost/form-lost',
+    children: [
+      // lost
+      {
+        path: '/lost',
+        name: 'lost',
+        redirect: '/lost/form-lost',
+        component: RouteView,
+        meta: { title: '寻物启事', icon: 'zoom-in', keepAlive: true },
+        children: [
+          {
+            path: '/lost/search-lost',
+            name: 'SearchLost',
+            component: () => import('@/views/lost/SearchLost'),
+            meta: { title: '查询', keepAlive: true }
+          },
+          {
+            path: '/lost/form-lost',
+            name: 'FormLost',
+            component: () => import('@/views/lost/FormLost'),
+            meta: { title: '发布寻物启事', keepAlive: true }
+          },
+          {
+            path: '/lost/delete-lost',
+            name: 'DeleteLost',
+            component: () => import('@/views/lost/deleteLost'),
+            meta: { title: '删除寻物启事', keepAlive: true }
+          },
+          {
+            path: '/lost/mylostform-lost',
+            name: 'MyLostForm',
+            component: () => import('@/views/lost/MyLostForm'),
+            meta: { title: '我的寻物启事', keepAlive: true }
+          }
+        ]
+      },
+      // found
+      {
+        path: '/found',
+        name: 'found',
+        redirect: '/found/form-found',
+        component: RouteView,
+        meta: { title: '失物招领', icon: 'zoom-out', keepAlive: true },
+        children: [
+          {
+            path: '/found/search-found',
+            name: 'SearchFound',
+            component: () => import('@/views/found/SearchFound'),
+            meta: { title: '查询', keepAlive: true }
+          },
+          {
+            path: '/found/form-found',
+            name: 'FormFound',
+            component: () => import('@/views/found/FormFound'),
+            meta: { title: '发布招领启事', keepAlive: true }
+          },
+          {
+            path: '/found/delete-found',
+            name: 'DeleteFound',
+            component: () => import('@/views/found/DeleteFound'),
+            meta: { title: '删除招领启事', keepAlive: true }
+          },
+          {
+            path: '/found/myfoundform-found',
+            name: 'MyFoundForm',
+            component: () => import('@/views/found/MyFoundForm'),
+            meta: { title: '我的招领启事', keepAlive: true }
+          }
+        ]
+      },
+      // usermanagement
+      {
+        path: '/usermng',
+        name: 'usermnglist',
+        redirect: '/usermng/useraction',
+        component: RouteView,
+        meta: { title: '用户管理', icon: 'team', keepAlive: true },
+        children: [
+          {
+            path: '/usermng/useraction',
+            name: 'UserAction',
+            component: () => import('@/views/userManagement/UserAction'),
+            meta: { title: '账户管理', keepAlive: true }
+          }
+        ]
+      },
+      // personinf
+      {
+        path: '/personinf',
+        name: 'personinflist',
+        redirect: '/personinf/information',
+        component: RouteView,
+        meta: { title: '个人中心', icon: 'user', keepAlive: true },
+        children: [
+          {
+            path: '/personinf/informatio',
+            name: 'Information',
+            component: () => import('@/views/personinf/Information'),
+            meta: { title: '基本信息', keepAlive: true }
+          },
+          {
+            path: '/personinf/changepsg',
+            name: 'ChangePsg',
+            component: () => import('@/views/personinf/ChangePsg'),
+            meta: { title: '修改密码', keepAlive: true }
+          }
+        ]
+      }
+    ]
+  }
+]
+export const studentRouterMap = [
+  {
+    path: '/',
+    name: 'index',
+    component: BasicLayout,
+    meta: { title: '首页' },
+    redirect: '/slost/form-lost',
+    children: [
+      // lost
+      {
+        path: '/slost',
+        name: 'lost',
+        redirect: '/slost/form-lost',
+        component: RouteView,
+        meta: { title: '寻物启事', icon: 'zoom-in', keepAlive: true },
+        children: [
+          {
+            path: '/slost/search-lost',
+            name: 'SearchLost',
+            component: () => import('@/views/lost/SearchLost'),
+            meta: { title: '查询', keepAlive: true }
+          },
+          {
+            path: '/slost/form-lost',
+            name: 'FormLost',
+            component: () => import('@/views/lost/FormLost'),
+            meta: { title: '发布寻物启事', keepAlive: true }
+          },
+          {
+            path: '/slost/delete-lost',
+            name: 'DeleteLost',
+            component: () => import('@/views/lost/deleteLost'),
+            meta: { title: '删除寻物启事', keepAlive: true }
+          },
+          {
+            path: '/slost/mylostform-lost',
+            name: 'MyLostForm',
+            component: () => import('@/views/lost/MyLostForm'),
+            meta: { title: '我的寻物启事', keepAlive: true }
+          }
+        ]
+      },
+      // found
+      {
+        path: '/sfound',
+        name: 'found',
+        redirect: '/sfound/form-found',
+        component: RouteView,
+        meta: { title: '失物招领', icon: 'zoom-out', keepAlive: true },
+        children: [
+          {
+            path: '/sfound/search-found',
+            name: 'SearchFound',
+            component: () => import('@/views/found/SearchFound'),
+            meta: { title: '查询', keepAlive: true }
+          },
+          {
+            path: '/sfound/form-found',
+            name: 'FormFound',
+            component: () => import('@/views/found/FormFound'),
+            meta: { title: '发布招领启事', keepAlive: true }
+          },
+          {
+            path: '/sfound/delete-found',
+            name: 'DeleteFound',
+            component: () => import('@/views/found/DeleteFound'),
+            meta: { title: '删除招领启事', keepAlive: true }
+          },
+          {
+            path: '/sfound/myfoundform-found',
+            name: 'MyFoundForm',
+            component: () => import('@/views/found/MyFoundForm'),
+            meta: { title: '我的招领启事', keepAlive: true }
+          }
+        ]
+      },
+      // usermanagement
+      {
+        path: '/susermng',
+        name: 'usermnglist',
+        redirect: '/susermng/useraction',
+        component: RouteView,
+        meta: { title: '用户管理', icon: 'team', keepAlive: true },
+        children: [
+          {
+            path: '/susermng/useraction',
+            name: 'UserAction',
+            component: () => import('@/views/userManagement/UserAction'),
+            meta: { title: '账户管理', keepAlive: true }
+          }
+        ]
+      },
+      // personinf
+      {
+        path: '/spersoninf',
+        name: 'personinflist',
+        redirect: '/spersoninf/information',
+        component: RouteView,
+        meta: { title: '个人中心', icon: 'user', keepAlive: true },
+        children: [
+          {
+            path: '/spersoninf/informatio',
+            name: 'Information',
+            component: () => import('@/views/personinf/Information'),
+            meta: { title: '基本信息', keepAlive: true }
+          },
+          {
+            path: '/spersoninf/changepsg',
+            name: 'ChangePsg',
+            component: () => import('@/views/personinf/ChangePsg'),
+            meta: { title: '修改密码', keepAlive: true }
+          }
+        ]
+      }
+    ]
+  }
+]
+
 export const asyncRouterMap = [
 
   {

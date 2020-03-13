@@ -20,7 +20,7 @@
               type="text"
               placeholder="工号: admin"
               v-decorator="[
-                'username',
+                'userID',
                 {rules: [{ required: true, message: '请输入工号' }, { validator: handleUsernameOrEmail }], validateTrigger: 'change'}
               ]"
             >
@@ -51,7 +51,7 @@
               type="text"
               placeholder="账户: admin"
               v-decorator="[
-                'username',
+                'userID',
                 {rules: [{ required: true, message: '请输入学号' }, { validator: handleUsernameOrEmail }], validateTrigger: 'change'}
               ]"
             >
@@ -140,21 +140,24 @@
       !-->
     </a-form>
 
-    <two-step-captcha
+    <!-- <two-step-captcha
       v-if="requiredTwoStepCaptcha"
       :visible="stepCaptchaVisible"
       @success="stepCaptchaSuccess"
       @cancel="stepCaptchaCancel"
-    ></two-step-captcha>
+    ></two-step-captcha> -->
   </div>
 </template>
 
 <script>
-import md5 from 'md5'
+// import md5 from 'md5'
 import TwoStepCaptcha from '@/components/tools/TwoStepCaptcha'
 import { mapActions } from 'vuex'
 import { timeFix } from '@/utils/util'
-import { getSmsCaptcha, get2step } from '@/api/login'
+// import { getSmsCaptcha, get2step } from '@/api/login'
+import Vue from 'vue'
+import { ROLE_ID } from '@/store/mutation-types'
+// import store from '@/store'
 
 export default {
   components: {
@@ -179,16 +182,16 @@ export default {
       }
     }
   },
-  created () {
-    get2step({ })
-      .then(res => {
-        this.requiredTwoStepCaptcha = res.result.stepCode
-      })
-      .catch(() => {
-        this.requiredTwoStepCaptcha = false
-      })
-    // this.requiredTwoStepCaptcha = true
-  },
+  // created () {
+  //   get2step({ })
+  //     .then(res => {
+  //       this.requiredTwoStepCaptcha = res.result.stepCode
+  //     })
+  //     .catch(() => {
+  //       this.requiredTwoStepCaptcha = false
+  //     })
+  //   // this.requiredTwoStepCaptcha = true
+  // },
   methods: {
     ...mapActions(['Login', 'Logout']),
     // handler
@@ -205,6 +208,7 @@ export default {
     handleTabClick (key) {
       this.customActiveKey = key
       // this.form.resetFields()
+      console.log(this.customActiveKey)
     },
     handleSubmit (e) {
       e.preventDefault()
@@ -217,16 +221,24 @@ export default {
 
       state.loginBtn = true
 
-      const validateFieldsKey = customActiveKey === 'tab1' ? ['username', 'password'] : ['mobile', 'captcha']
+      const validateFieldsKey = ['userID', 'password']
 
       validateFields(validateFieldsKey, { force: true }, (err, values) => {
         if (!err) {
-          console.log('login form', values)
           const loginParams = { ...values }
-          delete loginParams.username
+          if (customActiveKey === 'tab1') {
+            Vue.ls.set(ROLE_ID, 'admin')
+            console.log('管理员上线')
+            loginParams.auth = 'admin'
+          } else if (customActiveKey === 'tab2') {
+            Vue.ls.set(ROLE_ID, 'student')
+            loginParams.auth = 'student'
+            console.log('学生上线')
+          } else {
+            console.log('都不是')
+          }
           console.log('login form', loginParams)
-          loginParams[!state.loginType ? 'email' : 'username'] = values.username
-          loginParams.password = md5(values.password)
+          // loginParams.password = md5(values.password)
           Login(loginParams)
             .then((res) => this.loginSuccess(res))
             .catch(err => this.requestFailed(err))
@@ -240,62 +252,8 @@ export default {
         }
       })
     },
-    getCaptcha (e) {
-      e.preventDefault()
-      const { form: { validateFields }, state } = this
-
-      validateFields(['mobile'], { force: true }, (err, values) => {
-        if (!err) {
-          state.smsSendBtn = true
-
-          const interval = window.setInterval(() => {
-            if (state.time-- <= 0) {
-              state.time = 60
-              state.smsSendBtn = false
-              window.clearInterval(interval)
-            }
-          }, 1000)
-
-          const hide = this.$message.loading('验证码发送中..', 0)
-          getSmsCaptcha({ mobile: values.mobile }).then(res => {
-            setTimeout(hide, 2500)
-            this.$notification['success']({
-              message: '提示',
-              description: '验证码获取成功，您的验证码为：' + res.result.captcha,
-              duration: 8
-            })
-          }).catch(err => {
-            setTimeout(hide, 1)
-            clearInterval(interval)
-            state.time = 60
-            state.smsSendBtn = false
-            this.requestFailed(err)
-          })
-        }
-      })
-    },
-    stepCaptchaSuccess () {
-      this.loginSuccess()
-    },
-    stepCaptchaCancel () {
-      this.Logout().then(() => {
-        this.loginBtn = false
-        this.stepCaptchaVisible = false
-      })
-    },
     loginSuccess (res) {
       console.log(res)
-      // check res.homePage define, set $router.push name res.homePage
-      // Why not enter onComplete
-      /*
-      this.$router.push({ name: 'analysis' }, () => {
-        console.log('onComplete')
-        this.$notification.success({
-          message: '欢迎',
-          description: `${timeFix()}，欢迎回来`
-        })
-      })
-      */
       this.$router.push({ path: '/' })
       // 延迟 1 秒显示欢迎信息
       setTimeout(() => {
