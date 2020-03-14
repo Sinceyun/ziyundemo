@@ -56,7 +56,7 @@
           <div>编号：{{ item.findformid }}</div>
         </div>
         <template>
-          <a-button type="primary" @click="handleOk (item.id)">留言</a-button>
+          <a-button type="primary" @click="handleOk (item.findformid)">留言</a-button>
         </template>
         <div v-if="item.visible">
           <a-textarea
@@ -64,8 +64,8 @@
             placeholder="请留下你的手机号码等信息，已便发布者联系你！"
             :rows="4">
           </a-textarea>
-          <a-button @click="handleSure (item.id)">确定</a-button>
-          <a-button @click="handleCancel(item.id)">取消</a-button>
+          <a-button @click="handleSure (item.findformid)">确定</a-button>
+          <a-button @click="handleCancel(item.findformid)">取消</a-button>
         </div>
       </a-list-item>
     </a-list>
@@ -92,8 +92,13 @@ export default {
     // var _this = this
     console.log('拉取失物招领')
     this.axios.get('/getfindform').then((res) => {
-      console.log(res)
-      this.listData = res
+      const ld = res
+      for (let i = 0; i < ld.length; i++) {
+        ld[i].visible = false
+        ld[i].textareaMsg = ''
+      }
+      this.listData = ld
+      console.log(this.listData)
     }).catch((err) => {
       console.log(err)
     })
@@ -124,25 +129,41 @@ export default {
       }
       console.log(params)
       this.axios.get('/searchfindform', { params }).then((res) => {
-        console.log(res)
-        this.listData = res
+        const ld = res
+        for (let i = 0; i < ld.length; i++) {
+          ld[i].visible = false
+          ld[i].textareaMsg = ''
+        }
+        this.listData = ld
+        console.log(this.listData)
       }).catch((err) => {
         console.log('searchfindform' + err)
       })
     },
     handleOk (id) {
-      const oj = this.listData.find(oj => oj.id === id)
+      const oj = this.listData.find(oj => oj.findformid === id)
       const idx = this.listData.indexOf(oj)
       this.listData[idx].visible = true
-      console.log(idx)
+      console.log('数组下标' + idx)
+      console.log(this.listData[idx])
     },
     handleSure (id, index) {
-      const oj = this.listData.find(oj => oj.id === id)
+      const oj = this.listData.find(oj => oj.findformid === id)
       const idx = this.listData.indexOf(oj)
       console.log('留言：' + id + this.listData[idx].textareaMsg + idx)
+      const value = {
+        receiveid: this.listData[idx].publicid,
+        sendid: 'admin',
+        msg: this.listData[idx].textareaMsg
+      }
+      this.axios.post('/sendMsg', value).then((res) => {
+        console.log(res)
+      }).catch((err) => {
+        console.log(err)
+      })
     },
     handleCancel (id) {
-      const oj = this.listData.find(oj => oj.id === id)
+      const oj = this.listData.find(oj => oj.findformid === id)
       const idx = this.listData.indexOf(oj)
       this.listData[idx].textareaMsg = ''
       this.listData[idx].visible = false

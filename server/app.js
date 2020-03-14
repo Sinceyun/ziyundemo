@@ -10,6 +10,8 @@ var loginRouter = require('./routes/login')
 var addfindform = require('./routes/addfindform')
 var getfindform = require('./routes/getfindform')
 var searchfindform = require('./routes/searchfindform')
+var sendMsg = require('./routes/sendMsg')
+var getMsg = require('./routes/getMsg')
 var app = express()
 
 // view engine setup
@@ -28,6 +30,9 @@ app.use('/login', loginRouter)
 app.use('/addfindform', addfindform)
 app.use('/getfindform', getfindform)
 app.use('/searchfindform', searchfindform)
+app.use('/sendMsg', sendMsg)
+app.use('/getMsg', getMsg)
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404))

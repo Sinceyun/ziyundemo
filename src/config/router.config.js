@@ -115,6 +115,22 @@ export const adminRouterMap = [
             meta: { title: '修改密码', keepAlive: true }
           }
         ]
+      },
+      // message
+      {
+        path: '/message',
+        name: 'messagelist',
+        redirect: '/message/msg',
+        component: RouteView,
+        meta: { title: '消息管理', icon: 'user', keepAlive: true },
+        children: [
+          {
+            path: '/message/msg',
+            name: 'Message',
+            component: () => import('@/views/message/Message'),
+            meta: { title: '消息', keepAlive: true }
+          }
+        ]
       }
     ]
   }
