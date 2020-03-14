@@ -1,79 +1,160 @@
 <template>
-  <a-card :body-style="{padding: '24px 32px'}" :bordered="false">
-    <a-list
-      itemLayout="vertical"
-      size="small"
-      :pagination="pagination"
-      :dataSource="listData"
-    >
-
-      <a-list-item slot="renderItem" slot-scope="item, index" key="item.description">
-        <img slot="extra" width="272" alt="logo" src="https://c-ssl.duitang.com/uploads/item/201711/21/20171121234138_ez53k.png"/>
-        <a-list-item-meta
-          :description="item.description"
-          :title="item.title"
-        >
-        </a-list-item-meta>
-        <div>
-          <div>发布时间：{{ item.publictime }}</div>
-          <div>丢失地点：{{ item.lostplace }}</div>
-          <div>失物类别：{{ item.lostsort }}</div>
-          <b>{{ item.content }}</b>
-        </div>
-        <template>
-          <a-button type="primary" @click="deleteLostForm(index)">删除</a-button>
-          <a-button @click="upForm(index)">置顶</a-button>
-        </template>
-      </a-list-item>
-    </a-list>
-  </a-card>
+  <div>
+    <div class="table-operations">
+      <a-button @click="clearFilters">重置筛选</a-button>
+      <a-button @click="clearAll">重置筛选和排序</a-button>
+    </div>
+    <a-table :columns="columns" :dataSource="dataSource" @change="handleChange" >
+      <template slot="operation" slot-scope="text, record">
+        <a-popconfirm
+          v-if="dataSource.length"
+          title="确定删除?"
+          @confirm="() => onDelete(record.lostformid)">
+          <a href="#">删除</a>
+        </a-popconfirm>
+      </template>
+      <div slot="expandedRowRender" slot-scope="record" style="margin: 0">
+        <p>{{ record.description }}</p>
+        <img width="150" alt="logo" :src="record.picture"/>
+      </div>
+    </a-table>
+  </div>
 </template>
 <script>
-var listData = []
-for (let i = 0; i < 23; i++) {
-  listData.push({
-    title: `找男朋友 ${i}`,
-    content: '  图中是我要找的朋友的类型',
-    publictime: '2020/2/20',
-    lostplace: '华山区',
-    lostsort: '其他',
-    id: `${i}`,
-    weight: 0,
-    description: `编号：1314${i}`
-  })
-}
-var currentPage = 1
-listData.sort(function (a, b) { return b.weight - a.weight })
 export default {
-  name: 'DeleteLost',
   data () {
     return {
-      listData,
-      currentPage,
-      pagination: {
-        onChange: (page) => {
-          console.log('page:' + page)
-          currentPage = page
-        },
-        pageSize: 5
-      },
-      form: this.$form.createForm(this)
+      dataSource: [],
+      filteredInfo: null,
+      sortedInfo: null
     }
   },
+  computed: {
+    columns () {
+      let { sortedInfo, filteredInfo } = this
+      sortedInfo = sortedInfo || {}
+      filteredInfo = filteredInfo || {}
+      const columns = [{
+        title: '发布者',
+        dataIndex: 'publicid',
+        key: 'publicid',
+        filters: [{ text: '管理员', value: 'admin' }],
+        filteredValue: filteredInfo.publicid || null,
+        onFilter: (value, record) => record.publicid.includes(value)
+      },
+      {
+        title: '编号',
+        dataIndex: 'lostformid',
+        key: 'lostformid'
+      }, {
+        title: '标题',
+        dataIndex: 'title',
+        key: 'title'
+      }, {
+        title: '发布时间',
+        dataIndex: 'publictime',
+        key: 'publictime',
+        sorter: (a, b) => {
+          let aTimeString = a.publictime
+          let bTimeString = b.publictime
+          aTimeString = aTimeString.replace(/-/g, '/')
+          bTimeString = bTimeString.replace(/-/g, '/')
+          const aTime = new Date(aTimeString).getTime()
+          const bTime = new Date(bTimeString).getTime()
+          return bTime - aTime
+        },
+        sortOrder: sortedInfo.columnKey === 'publictime' && sortedInfo.order
+      }, {
+        title: '当前状态',
+        dataIndex: 'status',
+        key: 'status',
+        filters: [
+          { text: '寻找中', value: '寻找中' },
+          { text: '已找到', value: '已找到' }
+        ],
+        filteredValue: filteredInfo.status || null,
+        onFilter: (value, record) => record.status.includes(value)
+      }, {
+        title: '地点',
+        dataIndex: 'place',
+        key: 'place',
+        filters: [
+          { text: '华山区', value: '华山区' },
+          { text: '启林区', value: '启林区' },
+          { text: '泰山区', value: '泰山区' },
+          { text: '其他', value: '其他' }
+        ],
+        filteredValue: filteredInfo.place || null,
+        onFilter: (value, record) => record.place.includes(value)
+      }, {
+        title: '类别',
+        dataIndex: 'sort',
+        key: 'sort',
+        filters: [
+          { text: '证件', value: '证件' },
+          { text: '财物', value: '财物' },
+          { text: '书本', value: '书本' },
+          { text: '其他', value: '其他' }
+        ],
+        filteredValue: filteredInfo.sort || null,
+        onFilter: (value, record) => record.sort.includes(value)
+      }, {
+        title: '操作',
+        dataIndex: 'operation',
+        scopedSlots: { customRender: 'operation' }
+      }]
+      return columns
+    }
+  },
+  mounted: function () {
+    console.log('拉取失物招领')
+    const params = { type: 'alllostform' }
+    this.axios.get('getlostform', { params }).then((res) => {
+      const ld = res
+      for (let i = 0; i < ld.length; i++) {
+        ld[i].key = i
+      }
+      this.dataSource = ld
+      console.log(this.dataSource)
+    }).catch((err) => {
+      console.log(err)
+    })
+  },
   methods: {
-    deleteLostForm (index) {
-      console.log('数组下标：' + ((currentPage - 1) * 5 + index))
-      listData.splice((currentPage - 1) * 5 + index, 1)
+    handleChange (pagination, filters, sorter) {
+      console.log('Various parameters', pagination, filters, sorter)
+      this.filteredInfo = filters
+      this.sortedInfo = sorter
     },
-    upForm (index) {
-      console.log('数组下标：' + ((currentPage - 1) * 5 + index))
-      listData[(currentPage - 1) * 5 + index].weight = 1
-      listData.sort(function (a, b) { return b.weight - a.weight })
-      // this.$form.createForm(this)
+    clearFilters () {
+      this.filteredInfo = null
+    },
+    clearAll () {
+      this.filteredInfo = null
+      this.sortedInfo = null
+    },
+    onDelete (id) {
+      const dataSource = [...this.dataSource]
+      this.dataSource = dataSource.filter(item => item.lostformid !== id)
+      const value = {
+        lostformid: id,
+        type: 'delete'
+      }
+      this.axios.post('postlostform', value).then((res) => {
+        console(res)
+      }).catch((err) => {
+        console.log(err)
+      })
     }
   }
 }
 </script>
-<style>
+<style scoped>
+.table-operations {
+  margin-bottom: 16px;
+}
 
+.table-operations > button {
+  margin-right: 8px;
+}
 </style>

@@ -28,10 +28,10 @@
             证件
           </a-select-option>
           <a-select-option value="钱财">
-            钱财
+            财物
           </a-select-option>
-          <a-select-option value="物品">
-            物品
+          <a-select-option value="书本">
+            书本
           </a-select-option>
           <a-select-option value="其他">
             其他
@@ -46,7 +46,7 @@
           style="width: 100%"
           v-decorator="['findtime', config]" />
       </a-form-item>
-      <a-form-item
+      <!-- <a-form-item
         label="发布时间"
         v-bind="formItemLayout">
         <a-date-picker
@@ -55,7 +55,7 @@
           show-time
           format="YYYY-MM-DD HH:mm:ss"
           v-decorator="['publictime', config]" />
-      </a-form-item>
+      </a-form-item> -->
       <a-form-item
         v-bind="formItemLayout"
         label="拾取地点"
@@ -146,6 +146,7 @@
   </a-card>
 </template>
 <script>
+import store from '@/store'
 export default {
   name: 'FormLost',
   data: () => ({
@@ -173,9 +174,7 @@ export default {
           const values = {
             ...fieldsValue,
             'findtime': fieldsValue['findtime'].format('YYYY-MM-DD'),
-            'publicid': 'admin',
-            'publictime': fieldsValue['publictime'].format('YYYY-MM-DD HH:mm:ss'),
-            'findformid': '00005',
+            'publicid': store.getters.userID,
             'status': '寻找中'
           }
           this.axios.post('addfindform', values).then((res) => {

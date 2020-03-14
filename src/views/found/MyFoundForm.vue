@@ -8,29 +8,39 @@
           itemLayout="vertical"
           size="small"
           :pagination="pagination"
-          :dataSource="listDataFounding"
+          :dataSource="listDataFinding"
         >
-          <a-list-item slot="renderItem" slot-scope="item, index" key="item.id">
-            <img slot="extra" width="150" alt="logo" :src="item.picturesrc"/>
+          <a-list-item slot="renderItem" slot-scope="item" key="item.findformid">
+            <img slot="extra" width="150" alt="logo" :src="item.picture"/>
             <a-list-item-meta
-              :description="item.currentStatus"
+              :description="item.status"
               :title="item.title"
             >
             </a-list-item-meta>
             <div>
               <div>
-                <span>发布时间：{{ item.publicTime }}</span>
-                <span>编号：{{ item.id }}</span>
+                <span>发布时间：{{ item.publictime }}</span>
               </div>
-              <b>{{ item.content }}</b>
-              <div>拾获时间：{{ item.foundTime }}</div>
-              <div>丢失地点：{{ item.foundplace }}</div>
-              <div>失物类别：{{ item.foundsort }}</div>
+              <b>{{ item.description }}</b>
+              <div>拾获时间：{{ item.findtime }}</div>
+              <div>丢失地点：{{ item.place }}</div>
+              <div>失物类别：{{ item.sort }}</div>
+              <div>编号：{{ item.findformid }}</div>
             </div>
-            <template>
+            <template slot="actions"><a-popconfirm
+              title="确定删除?"
+              @confirm="() => deletefindForm(item.findformid)">
+              <a href="#">删除</a>
+            </a-popconfirm></template>
+            <template slot="actions"><a-popconfirm
+              title="更改状态?"
+              @confirm="() => updatefindForm(item.findformid)">
+              <a href="#">已找到</a>
+            </a-popconfirm></template>
+            <!-- <template>
               <a-button type="primary" @click="deleteLostForm(index)">删除</a-button>
               <a-button @click="foudingToFounded(index)">已找到</a-button>
-            </template>
+            </template> -->
           </a-list-item>
         </a-list>
       </a-card>
@@ -43,28 +53,33 @@
           itemLayout="vertical"
           size="small"
           :pagination="pagination"
-          :dataSource="listDataFounded"
+          :dataSource="listDataFound"
         >
-          <a-list-item slot="renderItem" slot-scope="item, index" key="item.id">
-            <img slot="extra" width="150" alt="logo" :src="item.picturesrc"/>
+          <a-list-item slot="renderItem" slot-scope="item" key="item.findformid">
+            <img slot="extra" width="150" alt="logo" :src="item.picture"/>
             <a-list-item-meta
-              :description="item.currentStatus"
+              :description="item.status"
               :title="item.title"
             >
             </a-list-item-meta>
             <div>
               <div>
-                <span>发布时间：{{ item.publicTime }}</span>
-                <span>编号：{{ item.id }}</span>
+                <span>发布时间：{{ item.publictime }}</span>
               </div>
-              <b>{{ item.content }}</b>
-              <div>拾获时间：{{ item.foundTime }}</div>
-              <div>丢失地点：{{ item.foundplace }}</div>
-              <div>失物类别：{{ item.foundsort }}</div>
+              <b>{{ item.description }}</b>
+              <div>拾获时间：{{ item.findtime }}</div>
+              <div>丢失地点：{{ item.place }}</div>
+              <div>失物类别：{{ item.sort }}</div>
+              <div>编号：{{ item.findformid }}</div>
             </div>
-            <template>
+            <template slot="actions"><a-popconfirm
+              title="确定删除?"
+              @confirm="() => deletefindForm2(item.findformid)">
+              <a href="#">删除</a>
+            </a-popconfirm></template>
+            <!-- <template>
               <a-button type="primary" @click="deleteLostForm2(index)">删除</a-button>
-            </template>
+            </template> -->
           </a-list-item>
         </a-list>
       </a-card>
@@ -73,60 +88,12 @@
 </template>
 
 <script>
-var listDataFounding = [{
-  owner: '201625022850',
-  title: '捡到一把钥匙',
-  content: '在西园一楼食堂捡到的，钥匙圈有皮卡丘挂件',
-  publicTime: '2020-03-06',
-  foundTime: '2020-03-05',
-  foundplace: '华山区',
-  foundsort: '财物',
-  id: '0001',
-  currentStatus: '寻找中',
-  weight: 0,
-  picturesrc: ''
-}, {
-  owner: '201625022851',
-  title: '捡到一本书《幽默散文读本》',
-  content: '在教三405室捡到的',
-  publicTime: '2020-03-06',
-  foundTime: '2020-03-06',
-  foundplace: '华山区',
-  foundsort: '书本',
-  id: '0002',
-  currentStatus: '寻找中',
-  weith: 1,
-  picturesrc: 'http://img5.imgtn.bdimg.com/it/u=2079730006,405640849&fm=15&gp=0.jpg'
-}]
+import store from '@/store'
 export default {
   data () {
     return {
-      listDataFounding,
-      listDataFounded: [{
-        owner: '201625022850',
-        title: '捡到一把钥匙',
-        content: '在西园一楼食堂捡到的，钥匙圈有皮卡丘挂件',
-        publicTime: '2020-03-06',
-        foundTime: '2020-03-05',
-        foundplace: '华山区',
-        foundsort: '财物',
-        id: '0003',
-        currentStatus: '已找到',
-        weight: 0,
-        picturesrc: 'http://img5.imgtn.bdimg.com/it/u=2079730006,405640849&fm=15&gp=0.jpg'
-      }, {
-        owner: '201625022851',
-        title: '捡到一本书《幽默散文读本》',
-        content: '在教三405室捡到的',
-        publicTime: '2020-03-06',
-        foundTime: '2020-03-06',
-        foundplace: '华山区',
-        foundsort: '书本',
-        id: '0004',
-        currentStatus: '已找到',
-        weith: 1,
-        picturesrc: 'http://img5.imgtn.bdimg.com/it/u=2079730006,405640849&fm=15&gp=0.jpg'
-      }],
+      listDataFinding: [],
+      listDataFound: [],
       currentPage: 1,
       pagination: {
         onChange: (page) => {
@@ -138,22 +105,80 @@ export default {
       form: this.$form.createForm(this)
     }
   },
+  mounted: function () {
+    var params = {
+      status: '寻找中',
+      publicid: store.getters.userID,
+      type: 'myform'
+    }
+    this.axios.get('getfindform', { params }).then((res) => {
+      this.listDataFinding = res
+      console.log(this.listDataFinding)
+    }).catch((err) => {
+      console.log(err)
+    })
+    params = {
+      status: '已找到',
+      publicid: store.getters.userID,
+      type: 'myform'
+    }
+    this.axios.get('getfindform', { params }).then((res) => {
+      this.listDataFound = res
+      console.log(this.listDataFound)
+    }).catch((err) => {
+      console.log(err)
+    })
+  },
   methods: {
     callback (key) {
       console.log(key)
     },
-    deleteLostForm (index) {
-      console.log('数组下标：' + ((this.currentPage - 1) * 5 + index))
-      this.listDataFounding.splice((this.currentPage - 1) * 5 + index, 1)
-      this.axios.get('login').then((res) => {
-        console.log(res)
+    deletefindForm (id) {
+      const oj = this.listDataFinding.find(oj => oj.findformid === id)
+      const idx = this.listDataFinding.indexOf(oj)
+      this.listDataFinding.splice(idx, 1)
+      console.log(oj)
+      const value = {
+        findformid: id,
+        type: 'delete'
+      }
+      this.axios.post('postfindform', value).then((res) => {
+        console(res)
       }).catch((err) => {
         console.log(err)
       })
     },
-    deleteLostForm2 (index) {
-      console.log('数组下标：' + ((this.currentPage - 1) * 5 + index))
-      this.listDataFounded.splice((this.currentPage - 1) * 5 + index, 1)
+    updatefindForm (id) {
+      const oj = this.listDataFinding.find(oj => oj.findformid === id)
+      const idx = this.listDataFinding.indexOf(oj)
+      oj.status = '已找到'
+      this.listDataFinding.splice(idx, 1)
+      this.listDataFound.splice(0, 0, oj)
+      console.log('update findform' + oj)
+      const value = {
+        findformid: id,
+        type: 'update'
+      }
+      this.axios.post('postfindform', value).then((res) => {
+        console(res)
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    deletefindForm2 (id) {
+      const oj = this.listDataFound.find(oj => oj.findformid === id)
+      const idx = this.listDataFound.indexOf(oj)
+      this.listDataFound.splice(idx, 1)
+      console.log('delete findform' + oj)
+      const value = {
+        findformid: id,
+        type: 'delete'
+      }
+      this.axios.post('postfindform', value).then((res) => {
+        console(res)
+      }).catch((err) => {
+        console.log(err)
+      })
     },
     foudingToFounded (index) {
       console.log('数组下标：' + ((this.currentPage - 1) * 5 + index))

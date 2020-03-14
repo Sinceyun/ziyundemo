@@ -23,15 +23,14 @@
         <label for="foundplace"><b>当前状态: </b></label>
         <a-select id="foundstatus" defaultValue="寻找中" style="width: 100px" @change="statusChange">
           <a-select-option value="寻找中">寻找中</a-select-option>
-          <a-select-option value="founded">已找到</a-select-option>
+          <a-select-option value="已找到">已找到</a-select-option>
         </a-select>
       </a-col>
       <a-col :span="3">
         <a-button type="primary" @click="handleSearch">查询</a-button>
       </a-col>
     </a-row>
-    <a-row :gutter="16">
-    </a-row>
+    <div>___________________________________________________________________________________________________________________________________________________________</div>
     <a-list
       itemLayout="vertical"
       size="small"
@@ -55,16 +54,27 @@
           <div>失物类别：{{ item.sort }}</div>
           <div>编号：{{ item.findformid }}</div>
         </div>
-        <template>
-          <a-button type="primary" @click="handleOk (item.findformid)">留言</a-button>
+        <template slot="actions"><a-popconfirm
+          title="确定留言?"
+          @confirm="() => onSendMsg(item.findformid)">
+          <a href="#">留言</a>
+        </a-popconfirm>
         </template>
+        <!-- <template slot="actions">
+          <a-button type="primary" @click="handleOk (item.findformid)">留言</a-button>
+        </template> -->
         <div v-if="item.visible">
           <a-textarea
             v-model="item.textareaMsg"
             placeholder="请留下你的手机号码等信息，已便发布者联系你！"
             :rows="4">
           </a-textarea>
-          <a-button @click="handleSure (item.findformid)">确定</a-button>
+          <a-popconfirm
+            title="确定留言?"
+            @confirm="() => handleSure (item.findformid)">
+            <a-button>确定</a-button>
+          </a-popconfirm>
+          <!-- <a-button @click="handleSure (item.findformid)">确定</a-button> -->
           <a-button @click="handleCancel(item.findformid)">取消</a-button>
         </div>
       </a-list-item>
@@ -72,6 +82,7 @@
   </a-card>
 </template>
 <script>
+import store from '@/store'
 export default {
   name: 'SearchFound',
   data () {
@@ -91,7 +102,8 @@ export default {
   mounted: function () {
     // var _this = this
     console.log('拉取失物招领')
-    this.axios.get('/getfindform').then((res) => {
+    const params = { type: 'allfindform' }
+    this.axios.get('getfindform', { params }).then((res) => {
       const ld = res
       for (let i = 0; i < ld.length; i++) {
         ld[i].visible = false
@@ -128,7 +140,7 @@ export default {
         status: this.selectstatus
       }
       console.log(params)
-      this.axios.get('/searchfindform', { params }).then((res) => {
+      this.axios.get('searchfindform', { params }).then((res) => {
         const ld = res
         for (let i = 0; i < ld.length; i++) {
           ld[i].visible = false
@@ -140,7 +152,7 @@ export default {
         console.log('searchfindform' + err)
       })
     },
-    handleOk (id) {
+    onSendMsg (id) {
       const oj = this.listData.find(oj => oj.findformid === id)
       const idx = this.listData.indexOf(oj)
       this.listData[idx].visible = true
@@ -150,16 +162,27 @@ export default {
     handleSure (id, index) {
       const oj = this.listData.find(oj => oj.findformid === id)
       const idx = this.listData.indexOf(oj)
-      console.log('留言：' + id + this.listData[idx].textareaMsg + idx)
       const value = {
         receiveid: this.listData[idx].publicid,
-        sendid: 'admin',
+        sendid: store.getters.userID,
         msg: this.listData[idx].textareaMsg
       }
       this.axios.post('/sendMsg', value).then((res) => {
         console.log(res)
       }).catch((err) => {
         console.log(err)
+      })
+      const title = '成功发送至：' + this.listData[idx].publicid
+      const description = this.listData[idx].textareaMsg
+      this.openNotification(title, description)
+    },
+    openNotification (title, description) {
+      this.$notification.open({
+        message: title,
+        description: description,
+        onClick: () => {
+          console.log('Notification Clicked!')
+        }
       })
     },
     handleCancel (id) {

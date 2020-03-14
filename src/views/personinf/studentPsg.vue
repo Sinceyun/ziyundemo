@@ -70,8 +70,9 @@ export default {
       const values = {
         password: this.datalist.newPsg,
         userID: store.getters.userID,
-        type: 'updateAdaminPsw'
+        type: 'updateStudentPsw'
       }
+      console.log(values)
       this.axios.post('postUserInfo', values).then((res) => {
         console.log(res)
       }).catch((err) => {

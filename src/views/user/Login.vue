@@ -228,6 +228,7 @@ export default {
           const loginParams = { ...values }
           if (customActiveKey === 'tab1') {
             Vue.ls.set(ROLE_ID, 'admin')
+            // store.commit('SET_USERID', userid)
             console.log('管理员上线')
             loginParams.auth = 'admin'
           } else if (customActiveKey === 'tab2') {

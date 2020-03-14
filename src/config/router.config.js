@@ -122,7 +122,7 @@ export const adminRouterMap = [
         name: 'messagelist',
         redirect: '/message/msg',
         component: RouteView,
-        meta: { title: '消息管理', icon: 'user', keepAlive: true },
+        meta: { title: '消息管理', icon: 'message', keepAlive: true },
         children: [
           {
             path: '/message/msg',
@@ -163,12 +163,12 @@ export const studentRouterMap = [
             component: () => import('@/views/lost/FormLost'),
             meta: { title: '发布寻物启事', keepAlive: true }
           },
-          {
-            path: '/slost/delete-lost',
-            name: 'DeleteLost',
-            component: () => import('@/views/lost/deleteLost'),
-            meta: { title: '删除寻物启事', keepAlive: true }
-          },
+          // {
+          //   path: '/slost/delete-lost',
+          //   name: 'DeleteLost',
+          //   component: () => import('@/views/lost/deleteLost'),
+          //   meta: { title: '删除寻物启事', keepAlive: true }
+          // },
           {
             path: '/slost/mylostform-lost',
             name: 'MyLostForm',
@@ -197,33 +197,17 @@ export const studentRouterMap = [
             component: () => import('@/views/found/FormFound'),
             meta: { title: '发布招领启事', keepAlive: true }
           },
-          {
-            path: '/sfound/delete-found',
-            name: 'DeleteFound',
-            component: () => import('@/views/found/DeleteFound'),
-            meta: { title: '删除招领启事', keepAlive: true }
-          },
+          // {
+          //   path: '/sfound/delete-found',
+          //   name: 'DeleteFound',
+          //   component: () => import('@/views/found/DeleteFound'),
+          //   meta: { title: '删除招领启事', keepAlive: true }
+          // },
           {
             path: '/sfound/myfoundform-found',
             name: 'MyFoundForm',
             component: () => import('@/views/found/MyFoundForm'),
             meta: { title: '我的招领启事', keepAlive: true }
-          }
-        ]
-      },
-      // usermanagement
-      {
-        path: '/susermng',
-        name: 'usermnglist',
-        redirect: '/susermng/useraction',
-        component: RouteView,
-        meta: { title: '用户管理', icon: 'team', keepAlive: true },
-        children: [
-          {
-            path: '/susermng/useraction',
-            name: 'UserAction',
-            component: () => import('@/views/userManagement/UserAction'),
-            meta: { title: '账户管理', keepAlive: true }
           }
         ]
       },
@@ -238,14 +222,30 @@ export const studentRouterMap = [
           {
             path: '/spersoninf/informatio',
             name: 'Information',
-            component: () => import('@/views/personinf/Information'),
+            component: () => import('@/views/personinf/studentInfo'),
             meta: { title: '基本信息', keepAlive: true }
           },
           {
             path: '/spersoninf/changepsg',
             name: 'ChangePsg',
-            component: () => import('@/views/personinf/ChangePsg'),
+            component: () => import('@/views/personinf/studentPsg'),
             meta: { title: '修改密码', keepAlive: true }
+          }
+        ]
+      },
+      // message
+      {
+        path: '/smessage',
+        name: 'messagelist',
+        redirect: '/smessage/msg',
+        component: RouteView,
+        meta: { title: '消息管理', icon: 'message', keepAlive: true },
+        children: [
+          {
+            path: '/smessage/msg',
+            name: 'Message',
+            component: () => import('@/views/message/Message'),
+            meta: { title: '消息', keepAlive: true }
           }
         ]
       }

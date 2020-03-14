@@ -10,6 +10,37 @@
           :placeholder="form.name" />
       </a-form-item>
       <a-form-item
+        label="专业"
+        v-bind="formItemLayout">
+        <a-input
+          name="profession"
+          v-model="form.profession"
+          placeholder="请输入职务" />
+      </a-form-item>
+      <a-form-item
+        v-bind="formItemLayout"
+        label="校区"
+        has-feedback
+      >
+        <a-select
+          v-model="form.zone"
+          placeholder="请选择校区"
+        >
+          <a-select-option value="泰山区">
+            泰山区
+          </a-select-option>
+          <a-select-option value="华山区">
+            华山区
+          </a-select-option>
+          <a-select-option value="启林区">
+            启林区
+          </a-select-option>
+          <a-select-option value="其他">
+            其他
+          </a-select-option>
+        </a-select>
+      </a-form-item>
+      <a-form-item
         label="联系电话"
         v-bind="formItemLayout">
         <a-input
@@ -48,7 +79,6 @@
 <script>
 import store from '@/store'
 export default {
-  name: 'FormFound',
   data: () => ({
     visible: false,
     ModalText: '确定修改??',
@@ -62,18 +92,22 @@ export default {
     form: {
       name: '',
       phone: '',
-      email: ''
+      email: '',
+      zone: '',
+      profession: ''
     }
   }),
   mounted: function () {
-    var params = { userID: store.getters.userID, type: 'getAdminInfo' }
+    var params = { userID: store.getters.userID, type: 'getStudentInfo' }
     this.axios.get('getUserInfo', { params }).then((res) => {
       const oj = res
       console.log(oj)
+      this.form.profession = oj[0].profession
       this.form.name = oj[0].name
       this.form.phone = oj[0].phone
       this.form.email = oj[0].email
       this.form.userID = oj[0].userID
+      this.form.zone = oj[0].zone
     }).catch((err) => {
       console.log(err)
     })
@@ -85,7 +119,9 @@ export default {
         name: this.form.name,
         phone: this.form.phone,
         email: this.form.email,
-        type: 'updateAdminInfo'
+        profession: this.form.profession,
+        zone: this.form.zone,
+        type: 'updateStudentInfo'
       }
       this.axios.post('postUserInfo', values).then((res) => {
         console.log(res)

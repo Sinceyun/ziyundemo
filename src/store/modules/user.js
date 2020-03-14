@@ -10,10 +10,13 @@ const user = {
     welcome: '',
     avatar: '',
     roles: [],
-    info: {}
+    info: {},
+    userID: ''
   },
-
   mutations: {
+    SET_USERID: (state, userID) => {
+      state.userID = userID
+    },
     SET_TOKEN: (state, token) => {
       state.token = token
     },
@@ -41,6 +44,7 @@ const user = {
           console.log('result', response)
           Vue.ls.set(ACCESS_TOKEN, result.token, 7 * 24 * 60 * 60 * 1000)
           commit('SET_TOKEN', result.token)
+          commit('SET_USERID', result.userID)
           resolve(result)
         }).catch(error => {
           reject(error)

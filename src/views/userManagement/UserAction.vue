@@ -79,14 +79,14 @@ const columns = [{
   }
 }, {
   title: '账号（学号）',
-  dataIndex: 'id',
-  key: 'id',
+  dataIndex: 'userID',
+  key: 'userID',
   scopedSlots: {
     filterDropdown: 'filterDropdown',
     filterIcon: 'filterIcon',
     customRender: 'customRender'
   },
-  onFilter: (value, record) => record.id.toLowerCase().includes(value.toLowerCase()),
+  onFilter: (value, record) => record.userID.toLowerCase().includes(value.toLowerCase()),
   onFilterDropdownVisibleChange: (visible) => {
     if (visible) {
       setTimeout(() => {
@@ -103,7 +103,7 @@ const columns = [{
     filterIcon: 'filterIcon',
     customRender: 'customRender'
   },
-  onFilter: (value, record) => record.prof.toLowerCase().includes(value.toLowerCase()),
+  onFilter: (value, record) => record.profession.toLowerCase().includes(value.toLowerCase()),
   onFilterDropdownVisibleChange: (visible) => {
     if (visible) {
       setTimeout(() => {
@@ -120,22 +120,10 @@ const columns = [{
   scopedSlots: { customRender: 'operation' }
 }]
 
-const data = []
-for (let i = 0; i < 46; i++) {
-  data.push({
-    name: `张${i}`,
-    id: `2016250503${i}`,
-    key: `2016250503${i}`,
-    profession: `网络工程`,
-    phone: '15802033329',
-    psg: '11111111'
-  })
-}
-
 export default {
   data () {
     return {
-      data,
+      data: [],
       columns,
       selectedRowKeys: [], // Check here to configure the default column
       loading: false,
@@ -148,17 +136,40 @@ export default {
       return this.selectedRowKeys.length > 0
     }
   },
+  mounted: function () {
+    console.log('拉取学生用户列表')
+    const params = { type: 'allstudent' }
+    this.axios.get('/getstudent', { params }).then((res) => {
+      const ld = res
+      for (let i = 0; i < ld.length; i++) {
+        ld[i].key = i
+      }
+      this.data = ld
+      console.log(this.data)
+    }).catch((err) => {
+      console.log(err)
+    })
+  },
   methods: {
     start () {
       this.loading = true
       // ajax request after empty completing
       for (let i = 0; i < this.selectedRowKeys.length; i++) {
         const key = this.selectedRowKeys[i]
-        const oj = data.find(oj => oj.key === key)
+        const oj = this.data.find(oj => oj.key === key)
         console.log(oj)
-        const index = data.indexOf(oj)
+        const index = this.data.indexOf(oj)
         console.log(index)
-        data.splice(index, 1)
+        this.data.splice(index, 1)
+        const value = {
+          userID: oj.userID,
+          type: 'delete'
+        }
+        this.axios.post('poststudent', value).then((res) => {
+          console(res)
+        }).catch((err) => {
+          console.log(err)
+        })
       }
       setTimeout(() => {
         this.loading = false
@@ -170,10 +181,27 @@ export default {
       this.selectedRowKeys = selectedRowKeys
     },
     onReset (key) {
-      const oj = data.find(oj => oj.key === key)
-      const index = data.indexOf(oj)
-      data[index].psg = '123456'
-      console.log(data[index])
+      const oj = this.data.find(oj => oj.key === key)
+      const value = {
+        userID: oj.userID,
+        type: 'update'
+      }
+      this.axios.post('poststudent', value).then((res) => {
+        console(res)
+      }).catch((err) => {
+        console.log(err)
+      })
+      const title = '用户：' + oj.userID
+      this.openNotification(title, '密码重置成功！')
+    },
+    openNotification (title, description) {
+      this.$notification.open({
+        message: title,
+        description: description,
+        onClick: () => {
+          console.log('Notification Clicked!')
+        }
+      })
     },
     handleSearch (selectedKeys, confirm) {
       confirm()

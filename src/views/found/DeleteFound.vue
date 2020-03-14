@@ -9,7 +9,7 @@
         <a-popconfirm
           v-if="dataSource.length"
           title="确定删除?"
-          @confirm="() => onDelete(record.id)">
+          @confirm="() => onDelete(record.findformid)">
           <a href="#">删除</a>
         </a-popconfirm>
       </template>
@@ -24,169 +24,7 @@
 export default {
   data () {
     return {
-      dataSource: [
-        {
-          id: '0001',
-          owner: 'admin',
-          key: '0001',
-          title: '捡到一把钥匙',
-          publictime: '2020-4-03',
-          status: '寻找中',
-          place: '华山区',
-          sort: '财物',
-          description: '这是详细描述',
-          picture: 'http://img5.imgtn.bdimg.com/it/u=2079730006,405640849&fm=15&gp=0.jpg'
-        }, {
-          id: '0002',
-          owner: '201625022850',
-          key: '0002',
-          title: '捡到一本书',
-          publictime: '2020-4-05',
-          status: '寻找中',
-          place: '泰山区',
-          sort: '书本',
-          description: '这是详细描述'
-        }, {
-          id: '0003',
-          owner: 'admin',
-          key: '0003',
-          title: '捡到一把钥匙',
-          publictime: '2020-4-04',
-          status: '已找到',
-          place: '华山区',
-          sort: '财物',
-          description: '这是详细描述'
-        }, {
-          id: '0004',
-          owner: '201625040227',
-          key: '0004',
-          title: '捡到一本书',
-          publictime: '2020-4-19',
-          status: '已找到',
-          place: '华山区',
-          sort: '书本',
-          description: '这是详细描述'
-        }, {
-          id: '0005',
-          owner: 'admin',
-          key: '0005',
-          title: '捡到一把钥匙',
-          publictime: '2020-4-03',
-          status: '寻找中',
-          place: '泰山区',
-          sort: '财物',
-          description: '这是详细描述'
-        }, {
-          id: '0006',
-          owner: '201625060448',
-          key: '0006',
-          title: '捡到一本书',
-          publictime: '2020-4-05',
-          status: '寻找中',
-          place: '其他',
-          sort: '书本',
-          description: '这是详细描述'
-        }, {
-          id: '0007',
-          owner: 'admin',
-          key: '0007',
-          title: '捡到一把钥匙',
-          publictime: '2020-4-04',
-          status: '寻找中',
-          place: '启林区',
-          sort: '财物',
-          description: '这是详细描述'
-        }, {
-          id: '0008',
-          owner: '201625010227',
-          key: '0008',
-          title: '捡到一本书',
-          publictime: '2020-4-19',
-          status: '已找到',
-          place: '泰山区',
-          sort: '书本',
-          description: '这是详细描述'
-        }, {
-          id: '0009',
-          owner: 'admin',
-          key: '0009',
-          title: '捡到一把钥匙',
-          publictime: '2020-4-03',
-          status: '寻找中',
-          place: '华山区',
-          sort: '财物',
-          description: '这是详细描述'
-        }, {
-          id: '0010',
-          owner: '201625022850',
-          key: '0010',
-          title: '捡到一本书',
-          publictime: '2020-4-05',
-          status: '寻找中',
-          place: '泰山区',
-          sort: '书本',
-          description: '这是详细描述'
-        }, {
-          id: '0011',
-          owner: 'admin',
-          key: '0011',
-          title: '捡到一把钥匙',
-          publictime: '2020-4-04',
-          status: '已找到',
-          place: '华山区',
-          sort: '财物',
-          description: '这是详细描述'
-        }, {
-          id: '0012',
-          owner: '201625040227',
-          key: '0012',
-          title: '捡到一本书',
-          publictime: '2020-4-19',
-          status: '已找到',
-          place: '华山区',
-          sort: '书本',
-          description: '这是详细描述'
-        }, {
-          id: '0013',
-          owner: 'admin',
-          key: '0013',
-          title: '捡到一把钥匙',
-          publictime: '2020-4-03',
-          status: '寻找中',
-          place: '泰山区',
-          sort: '财物',
-          description: '这是详细描述'
-        }, {
-          id: '0014',
-          owner: '201625060448',
-          key: '0014',
-          title: '捡到一本书',
-          publictime: '2020-4-05',
-          status: '寻找中',
-          place: '其他',
-          sort: '书本',
-          description: '这是详细描述'
-        }, {
-          id: '0015',
-          owner: 'admin',
-          key: '0015',
-          title: '捡到一把钥匙',
-          publictime: '2020-4-04',
-          status: '寻找中',
-          place: '启林区',
-          sort: '财物',
-          description: '这是详细描述'
-        }, {
-          owner: '201625010227',
-          id: '0016',
-          title: '捡到一本书',
-          publictime: '2020-4-19',
-          status: '已找到',
-          place: '泰山区',
-          sort: '书本',
-          description: '这是详细描述'
-        }
-      ],
+      dataSource: [],
       filteredInfo: null,
       sortedInfo: null
     }
@@ -198,16 +36,16 @@ export default {
       filteredInfo = filteredInfo || {}
       const columns = [{
         title: '发布者',
-        dataIndex: 'owner',
-        key: 'owner',
+        dataIndex: 'publicid',
+        key: 'publicid',
         filters: [{ text: '管理员', value: 'admin' }],
-        filteredValue: filteredInfo.owner || null,
-        onFilter: (value, record) => record.owner.includes(value)
+        filteredValue: filteredInfo.publicid || null,
+        onFilter: (value, record) => record.publicid.includes(value)
       },
       {
         title: '编号',
-        dataIndex: 'id',
-        key: 'id'
+        dataIndex: 'findformid',
+        key: 'findformid'
       }, {
         title: '标题',
         dataIndex: 'title',
@@ -237,7 +75,7 @@ export default {
         filteredValue: filteredInfo.status || null,
         onFilter: (value, record) => record.status.includes(value)
       }, {
-        title: '失物地点',
+        title: '地点',
         dataIndex: 'place',
         key: 'place',
         filters: [
@@ -249,7 +87,7 @@ export default {
         filteredValue: filteredInfo.place || null,
         onFilter: (value, record) => record.place.includes(value)
       }, {
-        title: '失物类别',
+        title: '类别',
         dataIndex: 'sort',
         key: 'sort',
         filters: [
@@ -268,6 +106,20 @@ export default {
       return columns
     }
   },
+  mounted: function () {
+    console.log('拉取失物招领')
+    const params = { type: 'allfindform' }
+    this.axios.get('getfindform', { params }).then((res) => {
+      const ld = res
+      for (let i = 0; i < ld.length; i++) {
+        ld[i].key = i
+      }
+      this.dataSource = ld
+      console.log(this.dataSource)
+    }).catch((err) => {
+      console.log(err)
+    })
+  },
   methods: {
     handleChange (pagination, filters, sorter) {
       console.log('Various parameters', pagination, filters, sorter)
@@ -283,7 +135,16 @@ export default {
     },
     onDelete (id) {
       const dataSource = [...this.dataSource]
-      this.dataSource = dataSource.filter(item => item.id !== id)
+      this.dataSource = dataSource.filter(item => item.findformid !== id)
+      const value = {
+        findformid: id,
+        type: 'delete'
+      }
+      this.axios.post('postfindform', value).then((res) => {
+        console(res)
+      }).catch((err) => {
+        console.log(err)
+      })
     }
   }
 }

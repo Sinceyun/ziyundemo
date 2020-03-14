@@ -3,10 +3,10 @@ var router = express.Router()
 var connection = require('../db/sql.js')
 router.post('/', (req, res) => {
   const info = req.body
-  const findformid = randomString(8)
+  const lostformid = randomString(8)
   var day = new Date()
   const publictime = day.toLocaleString()
-  const sql = `insert into findform (findformid, publicid, title, sort, findtime, place, description, picture, publictime, status) values ('${findformid}', '${info.publicid}', '${info.title}', '${info.sort}', '${info.findtime}', '${info.place}',' ${info.description}', '${info.picture}', '${publictime}', '${info.status}')`
+  const sql = `insert into lostform (lostformid, publicid, title, sort, losttime, place, description, picture, publictime, status) values ('${lostformid}', '${info.publicid}', '${info.title}', '${info.sort}', '${info.losttime}', '${info.place}',' ${info.description}', '${info.picture}', '${publictime}', '${info.status}')`
   connection.query(sql, (err, result) => {
     if (err) {
       throw err

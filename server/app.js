@@ -12,6 +12,16 @@ var getfindform = require('./routes/getfindform')
 var searchfindform = require('./routes/searchfindform')
 var sendMsg = require('./routes/sendMsg')
 var getMsg = require('./routes/getMsg')
+var deleteMsg = require('./routes/deleteMsg')
+var postfindform = require('./routes/postfindform')
+var getstudent = require('./routes/getstudent')
+var poststudent = require('./routes/poststudent')
+var getlostform = require('./routes/getlostform')
+var postlostform = require('./routes/postlostform')
+var addlostform = require('./routes/addlostform')
+var postUserInfo = require('./routes/postUserInfo')
+var getUserInfo = require('./routes/getUserInfo')
+
 var app = express()
 
 // view engine setup
@@ -32,6 +42,15 @@ app.use('/getfindform', getfindform)
 app.use('/searchfindform', searchfindform)
 app.use('/sendMsg', sendMsg)
 app.use('/getMsg', getMsg)
+app.use('/deleteMsg', deleteMsg)
+app.use('/postfindform', postfindform)
+app.use('/getstudent', getstudent)
+app.use('/poststudent', poststudent)
+app.use('/getlostform', getlostform)
+app.use('/postlostform', postlostform)
+app.use('/addlostform', addlostform)
+app.use('/postUserInfo', postUserInfo)
+app.use('/getUserInfo', getUserInfo)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

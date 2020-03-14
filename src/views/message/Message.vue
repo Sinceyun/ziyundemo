@@ -14,7 +14,7 @@
             <template slot="actions"><a-popconfirm
               title="确定删除?"
               @confirm="() => onDeleteReceive(item.id)">
-              <a href="#">delete</a>
+              <a href="#">删除</a>
             </a-popconfirm></template>
             <a-list-item-meta
               :description="item.time"
@@ -31,6 +31,34 @@
                 <a href="#">删除</a>
               </a-popconfirm>
             </template> -->
+          </a-list-item>
+        </a-list>
+      </a-card>
+    </a-tab-pane>
+    <a-tab-pane tab="发送" key="2">
+      <a-card :body-style="{padding: '24px 32px'}" :bordered="false">
+        <a-row :gutter="16">
+        </a-row>
+        <a-list
+          itemLayout="horizontal"
+          size="small"
+          :pagination="pagination"
+          :dataSource="listDataSendMsg"
+        >
+          <a-list-item slot="renderItem" slot-scope="item" key="item.id">
+            <template slot="actions"><a-popconfirm
+              title="确定删除?"
+              @confirm="() => onDeleteSend(item.id)">
+              <a href="#">删除</a>
+            </a-popconfirm></template>
+            <a-list-item-meta
+              :description="item.time"
+              :title="item.sendid"
+            >
+            </a-list-item-meta>
+            <div>
+              <b>{{ item.msg }}</b>
+            </div>
           </a-list-item>
         </a-list>
       </a-card>
@@ -74,6 +102,8 @@
 </template>
 
 <script>
+import store from '@/store'
+
 export default {
   data () {
     return {
@@ -91,14 +121,25 @@ export default {
     }
   },
   mounted: function () {
-    const params = { receiveid: 'admin' }
+    var params = { receiveid: store.getters.userID, type: 'receive' }
     this.axios.get('/getMsg', { params }).then((res) => {
       const ld = res
       for (let i = 0; i < ld.length; i++) {
-        res[i].id = i
+        ld[i].id = i
       }
       this.listDataReceive = ld
       console.log(this.listDataReceive)
+    })
+    params = { sendid: store.getters.userID, type: 'send' }
+    this.axios.get('/getMsg', { params }).then((res) => {
+      const ld = res
+      for (let i = 0; i < ld.length; i++) {
+        ld[i].id = i
+      }
+      this.listDataSendMsg = ld
+      console.log(this.listDataSendMsg)
+    }).catch((err) => {
+      console.log(err)
     })
   },
   methods: {
@@ -108,28 +149,34 @@ export default {
     onDeleteReceive (id) {
       const oj = this.listDataReceive.find(oj => oj.id === id)
       const idx = this.listDataReceive.indexOf(oj)
+      this.listDataReceive.splice(idx, 1)
       console.log(idx)
-    },
-    deleteLostForm (index) {
-      console.log('数组下标：' + ((this.currentPage - 1) * 5 + index))
-      this.listDataFounding.splice((this.currentPage - 1) * 5 + index, 1)
-      this.axios.get('login').then((res) => {
+      const value = {
+        receiveid: oj.receiveid,
+        sendid: oj.sendid,
+        time: oj.time
+      }
+      this.axios.post('/deleteMsg', value).then((res) => {
         console.log(res)
       }).catch((err) => {
         console.log(err)
       })
     },
-    deleteLostForm2 (index) {
-      console.log('数组下标：' + ((this.currentPage - 1) * 5 + index))
-      this.listDataFounded.splice((this.currentPage - 1) * 5 + index, 1)
-    },
-    foudingToFounded (index) {
-      console.log('数组下标：' + ((this.currentPage - 1) * 5 + index))
-      const formoj = this.listDataFounding[(this.currentPage - 1) * 5 + index]
-      formoj.currentStatus = '已找到'
-      console.log(formoj)
-      this.listDataFounding.splice((this.currentPage - 1) * 5 + index, 1)
-      this.listDataFounded.push(formoj)
+    onDeleteSend (id) {
+      const oj = this.listDataSendMsg.find(oj => oj.id === id)
+      const idx = this.listDataSendMsg.indexOf(oj)
+      this.listDataSendMsg.splice(idx, 1)
+      console.log(idx)
+      const value = {
+        receiveid: oj.receiveid,
+        sendid: oj.sendid,
+        time: oj.time
+      }
+      this.axios.post('/deleteMsg', value).then((res) => {
+        console.log(res)
+      }).catch((err) => {
+        console.log(err)
+      })
     }
   }
 }

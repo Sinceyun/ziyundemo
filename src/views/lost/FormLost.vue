@@ -6,34 +6,34 @@
         v-bind="formItemLayout">
         <a-input
           v-decorator="[
-            'name',
+            'title',
             {rules: [{ required: true, message: '请输入标题' }]}
           ]"
-          name="name"
+          name="title"
           placeholder="请输入标题" />
       </a-form-item>
       <a-form-item
         v-bind="formItemLayout"
-        label="丢失地点"
+        label="失物类别"
         has-feedback
       >
         <a-select
           v-decorator="[
-            'selectgoods',
+            'sort',
             {rules: [{ required: true, message: '请选择失物类别!' }]}
           ]"
           placeholder="请选择失物类别"
         >
-          <a-select-option value="certificate">
+          <a-select-option value="证件">
             证件
           </a-select-option>
-          <a-select-option value="money">
-            钱财
+          <a-select-option value="钱财">
+            财物
           </a-select-option>
-          <a-select-option value="goods">
-            物品
+          <a-select-option value="书本">
+            书本
           </a-select-option>
-          <a-select-option value="other">
+          <a-select-option value="其他">
             其他
           </a-select-option>
         </a-select>
@@ -42,9 +42,9 @@
         label="丢失时间"
         v-bind="formItemLayout">
         <a-date-picker
-          name="LostTime"
+          name="losttime"
           style="width: 100%"
-          v-decorator="['date-picker', config]" />
+          v-decorator="['losttime', config]" />
       </a-form-item>
       <a-form-item
         v-bind="formItemLayout"
@@ -53,21 +53,21 @@
       >
         <a-select
           v-decorator="[
-            'selectplace',
-            {rules: [{ required: true, message: '请选择丢失地点!' }]}
+            'place',
+            {rules: [{ required: true, message: '请选择拾取地点!' }]}
           ]"
-          placeholder="请选择丢失地点"
+          placeholder="请选择拾取地点"
         >
-          <a-select-option value="taishan">
+          <a-select-option value="泰山区">
             泰山区
           </a-select-option>
-          <a-select-option value="huashan">
+          <a-select-option value="华山区">
             华山区
           </a-select-option>
-          <a-select-option value="qilin">
+          <a-select-option value="启林区">
             启林区
           </a-select-option>
-          <a-select-option value="other">
+          <a-select-option value="其他">
             其他
           </a-select-option>
         </a-select>
@@ -84,30 +84,20 @@
           ]" />
       </a-form-item>
       <a-form-item
-        v-bind="formItemLayout"
-        label="Upload"
-        extra="longgggggggggggggggggggggggggggggggggg"
-      >
-        <a-upload
-          v-decorator="['upload', {
-            valuePropName: 'fileList',
-            getValueFromEvent: normFile,
-          }]"
-          name="logo"
-          action="/upload.do"
-          list-type="picture"
-        >
-          <a-button>
-            <a-icon type="upload" /> 点击上传
-          </a-button>
-        </a-upload>
+        label="图片"
+        v-bind="formItemLayout">
+        <a-input
+          name="picture"
+          v-decorator="[
+            'picture',
+            {rules: [{ required: false, message: '请输入图片url（可不填）' }]}
+          ]"
+          placeholder="请输入图片url（可不填）" />
       </a-form-item>
       <a-form-item
         :wrapperCol="{ span: 24 }"
         style="text-align: center"
       >
-        <!--
-        <a-button htmlType="submit" type="primary" >提交</a-button> !-->
         <div>
           <a-button type="primary" @click="showModal">提交</a-button>
           <a-modal
@@ -125,6 +115,7 @@
   </a-card>
 </template>
 <script>
+import store from '@/store'
 export default {
   name: 'FormLost',
   data: () => ({
@@ -136,7 +127,7 @@ export default {
       rules: [{ type: 'object', required: true, message: 'Please select time!' }]
     },
     visible: false,
-    ModalText: '确认提交失物招领表单?',
+    ModalText: '确认提交招领信息?',
     confirmLoading: false
   }),
   beforeCreate () {
@@ -147,14 +138,17 @@ export default {
       e.preventDefault()
       this.form.validateFields((err, fieldsValue) => {
         if (!err) {
-          const today = new Date()
-          const currentday = today.toLocaleDateString()
           const values = {
             ...fieldsValue,
-            'date-picker': fieldsValue['date-picker'].format('YYYY-MM-DD'),
-            'owner': 'admin',
-            'public-time': currentday
+            'losttime': fieldsValue['losttime'].format('YYYY-MM-DD'),
+            'publicid': store.getters.userID,
+            'status': '寻找中'
           }
+          this.axios.post('addlostform', values).then((res) => {
+            console(res)
+          }).catch((err) => {
+            console.log(err)
+          })
           console.log('Received values of form: ', values)
           this.ModalText = '发布成功！'
           this.confirmLoading = true
@@ -165,13 +159,6 @@ export default {
         }
       })
       this.form.resetFields()
-    },
-    normFile  (e) {
-      console.log('Upload event:', e)
-      if (Array.isArray(e)) {
-        return e
-      }
-      return e && e.fileList
     },
     showModal (e) {
       e.preventDefault()
